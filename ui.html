@@ -1,17 +1,21 @@
-<h2>シェイプクリエイター</h2>
-<p>Count: <input id="count" type="number" value="5"></p>
-<button id="create">Create</button>
-<button id="cancel">Cancel</button>
-<script>
-
-document.getElementById('create').onclick = () => {
-  const textbox = document.getElementById('count');
-  const count = parseInt(textbox.value, 10);
-  parent.postMessage({ pluginMessage: { type: 'create-shapes', count } }, '*')
-}
-
-document.getElementById('cancel').onclick = () => {
-  parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
-}
-
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    // JSONアップロード処理
+    function handleFileUpload(event) {
+      const file = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = () => {
+        const jsonData = JSON.parse(reader.result);
+        parent.postMessage({ pluginMessage: { type: 'process-json', data: jsonData } }, '*');
+      };
+      reader.readAsText(file);
+    }
+  </script>
+</head>
+<body>
+  <h3>Upload JSON to Generate Variables</h3>
+  <input type="file" accept="application/json" onchange="handleFileUpload(event)" />
+</body>
+</html>
